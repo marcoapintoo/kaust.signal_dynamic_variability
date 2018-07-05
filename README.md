@@ -51,19 +51,17 @@ and "song".
 ### Time-varying vector autoregressive model (TV-VAR)
 
 Generalization of a vector autoregressive model that employs a local
-stationary approach to model non-stationary signals: each $Y_{t}$
-can be expressed in terms of past data $Y_{y-1},\ldots,Y_{t-P}$.
+stationary approach to model non-stationary signals: each ![](https://latex.codecogs.com/svg.latex?Y_{t})
+can be expressed in terms of past data ![](https://latex.codecogs.com/svg.latex?Y_{y-1},\ldots,Y_{t-P}).
 This can be also used for modeling time-varying directed networks:
 
-$$
-Y_{t}=\sum_{\ell=1}^{P}\Phi_{t}\left(\ell\right)Y_{t-\ell}+\eta_{t},\ \ \ \eta_{t}\sim\mathcal{N}\left(0,\Sigma\right)
-$$
+![](https://latex.codecogs.com/svg.latex?Y_{t}=\sum_{\ell=1}^{P}\Phi_{t}\left(\ell\right)Y_{t-\ell}+\eta_{t},\ \ \ \eta_{t}\sim\mathcal{N}\left(0,\Sigma\right))
 
-* $\Phi_{t}\left(\ell\right)=\left[\phi_{ij,t}\left(\ell\right)\right]$:
+* ![](https://latex.codecogs.com/svg.latex?\Phi_{t}\left(\ell\right)=\left[\phi_{ij,t}\left(\ell\right)\right]):
 matricial representation of the VAR coefficients, or directed network
-of $N$ regions, at lag $\ell$ and time $t$.
-* $\left|\phi_{ij,t}\left(\ell\right)\right|>0$: strength of causal
-influence from region $j$ to region $i$.
+of N regions, at lag l and time t.
+* ![](https://latex.codecogs.com/svg.latex?\left|\phi_{ij,t}\left(\ell\right)\right|>0): strength of causal
+influence from region j to region i.
 
 ### Local sensitive hashing - random projection (LSH/RP)
 
@@ -73,33 +71,28 @@ clustering of time-varying connectivity over other classical approaches
 like K-means. An LSH family of hash functions $h$ must satisfy the
 following conditions:
 
-$$
-\begin{cases}
-\mathbb{P}\left[h\left(x\right)=h\left(y\right)\right]\ge p_{1} & \text{if }d\left(x,y\right)\le r_{1}\\
-\mathbb{P}\left[h\left(x\right)=h\left(y\right)\right]\le p_{2} & \text{if }d\left(x,y\right)\ge r_{2}
-\end{cases}
-$$
+![](https://latex.codecogs.com/svg.latex?\begin{cases}\mathbb{P}\left[h\left(x\right)=h\left(y\right)\right]\ge p_{1} & \text{if }d\left(x,y\right)\le r_{1}\\\mathbb{P}\left[h\left(x\right)=h\left(y\right)\right]\le p_{2} & \text{if }d\left(x,y\right)\ge r_{2}\end{cases})
 
-where $h$ is the LSH hash function, and $p_{1}\ge p_{2}$, and $r_{1}\le r_{2}$.
+where h is the LSH hash function, and ![](https://latex.codecogs.com/svg.latex?p_{1}\ge p_{2}), and ![](https://latex.codecogs.com/svg.latex?r_{1}\le r_{2}).
 
-Let $V=\left\{ V_{0},V_{1},\ldots,V_{K}\right\} $ be $K$ random
-projections sampled from a distribution $\mathcal{N}\left(0,\sigma_{V}^{2}\right)$.
-With $h\left(x\right)=\mathbb{I}\left(V_{i}^{T}x>0\right)$, each
-(vectorized) TV-VAR coefficient matrix $\Phi_{t}^{*}$ is assigned
-to a binary-encoded hash code $L_{t}$ (the brain connectivity state):
+Let ![](https://latex.codecogs.com/svg.latex?V=\left\{ V_{0},V_{1},\ldots,V_{K}\right\}) be K random
+projections sampled from a distribution ![](https://latex.codecogs.com/svg.latex?\mathcal{N}\left(0,\sigma_{V}^{2}\right)).
+With ![](https://latex.codecogs.com/svg.latex?h\left(x\right)=\mathbb{I}\left(V_{i}^{T}x>0\right)), each
+(vectorized) TV-VAR coefficient matrix ![](https://latex.codecogs.com/svg.latex?\Phi_{t}^{*}) is assigned
+to a binary-encoded hash code ![](https://latex.codecogs.com/svg.latex?L_{t}) (the brain connectivity state):
 
-$$
-L_{t}=\sum_{i=0}^{K}2^{i}\mathbb{I}\left(V_{i}^{T}\Phi_{t}^{*}>0\right),\;\;L_{t}\in\left\{ 0,1,\ldots,2^{K}-1\right\} 
-$$
-
+![](https://latex.codecogs.com/svg.latex?L_{t}=\sum_{i=0}^{K}2^{i}\mathbb{I}\left(V_{i}^{T}\Phi_{t}^{*}>0\right),\;\;L_{t}\in\left\{ 0,1,\ldots,2^{K}-1\right\} )
 
 ### State occupancy comparison
 
 Given stimulus labels at each time point, we compute the occupancy
 of connectivity states for each one. The similarity between each (stimulus-conditional)
 probability mass distribution (PMF) of state occupancies is calculated
-using a symmetric Kullback\textendash Leibler (SKL) divergence: \\ $d_{SKL}\left(P,Q\right)=\left|\sum_{i}P\left(i\right)\log\frac{Q\left(i\right)}{P\left(i\right)}\right|+\left|\sum_{i}Q\left(i\right)\log\frac{P\left(i\right)}{Q\left(i\right)}\right|$
-where $P$ and $Q$ are PMFs
+using a symmetric Kullback\textendash Leibler (SKL) divergence:
+
+![](https://latex.codecogs.com/svg.latex?d_{SKL}\left(P,Q\right)=\left|\sum_{i}P\left(i\right)\log\frac{Q\left(i\right)}{P\left(i\right)}\right|+\left|\sum_{i}Q\left(i\right)\log\frac{P\left(i\right)}{Q\left(i\right)}\right|)
+
+where P and Q are PMFs
 
 ![](./plots/EmpiricalEvaluation.png)
 
