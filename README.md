@@ -122,11 +122,11 @@ states for all subjects.
 
 **Subject 6251**
 
-![](./plots/32/background/convergence_stimuli/6251_stimuli.png)
+![](./plots/32/convergence_stimuli/6251_stimuli.png)
 
 **Subject 6389**
 
-![](./plots/32/background/convergence_stimuli/6389_stimuli.png)
+![](./plots/32/convergence_stimuli/6389_stimuli.png)
 
 
 ### Cross-subject Brain connectivity comparison
