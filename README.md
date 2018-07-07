@@ -55,7 +55,7 @@ stationary approach to model non-stationary signals: each ![](https://latex.code
 can be expressed in terms of past data ![](https://latex.codecogs.com/svg.latex?Y_{y-1},\ldots,Y_{t-P}).
 This can be also used for modeling time-varying directed networks:
 
-![](https://latex.codecogs.com/svg.latex?Y_{t}=\sum_{\ell=1}^{P}\Phi_{t}\left%28\ell\right%29Y_{t-\ell}+\eta_{t},\ \ \ \eta_{t}\sim\mathcal{N}\left%280,\Sigma\right%29)
+![](https://latex.codecogs.com/svg.latex?Y_{t}=\sum_{\ell=1}^{P}\Phi_{t}\left%28\ell\right%29Y_{t-\ell}+\eta_{t}), ![](https://latex.codecogs.com/svg.latex?\eta_{t}\sim\mathcal{N}\left%280,\Sigma\right%29)
 
 * ![](https://latex.codecogs.com/svg.latex?\Phi_{t}\left(\ell\right)=\left[\phi_{ij,t}\left(\ell\right)\right]):
 matricial representation of the VAR coefficients, or directed network
