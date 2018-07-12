@@ -137,6 +137,9 @@ The following shows an example of the Brain response to a specific stimulus:
 
 ![](./plots/JeffTalkingResponse.png)
 
+The Partial Directed Coherence equivalent for these coefficient matrices:
+
+![](./plots/JeffTalkingResponsePDC.png)
 
 # Credits
 
