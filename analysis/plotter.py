@@ -87,60 +87,6 @@ class SimpleDistanceHistogramPlotter(Plotter):
         plt.title("Subject {0}".format(codesubject), fontsize="x-large")
         self._save_figure(codesubject, "")
 
-class __DistanceHistogramPlotter(Plotter):
-    def __init__(self, filename_template="{codesubject}_histogram_distance", basepath="./plots/distance_matrices", label_groups=None, tight_mode=False):
-        super().__init__(filename_template, basepath)
-        self.label_groups = label_groups
-        self.tight_mode = tight_mode
-        self.default_title = "Subject {codesubject}"
-    
-    def plot_grid(self, codename, codesubjects, conditionals, rows=None, cols=None):
-        fig = plt.figure(figsize=(rows * 6, cols * 4))
-        for m, (codesubject, conditional) in enumerate(zip(codesubjects, conditionals)):
-            ax = fig.add_subplot(rows, cols, m + 1)
-            self._plot(codesubject, conditional, ax)
-        #plt.tight_layout()
-        self._save_figure(codename, "")
-    
-    def plot(self, codesubject, conditional):
-        print(":: Plotting the distance matrix of the histograms", codesubject)
-        fig = plt.figure(figsize=(8, 8))
-        ax = fig.add_subplot(1, 1, 1)
-        self._plot(codesubject, conditional, ax)
-        plt.tight_layout()
-        self._save_figure(codesubject, "")
-    
-    def _plot(self, codesubject, conditional, ax):
-        order = np.arange(conditional.distance_matrix.shape[0])
-        groups = None
-        coord_clusters = []
-        if self.label_groups is not None:
-            groups = np.array([np.array([conditional.keynames.index(v) for v in y]) for y in self.label_groups])
-            order = np.concatenate(groups)
-            coord_clusters = [0]
-            for i, u in enumerate(groups):
-                coord_clusters.append(coord_clusters[-1] + len(u))
-        keynames = np.array(conditional.keynames)
-        histogram_df = pd.DataFrame(
-            conditional.distance_matrix[order, :][:, order],
-            columns=keynames[order],
-            index=keynames[order],
-        )
-        sns.heatmap(histogram_df, vmax=200, cmap=COLOR_MAP, cbar=not self.tight_mode, ax=ax)
-        for i in range(0, len(coord_clusters) - 1):
-            plt.plot( (coord_clusters[i+1], coord_clusters[i+1]), (coord_clusters[i], coord_clusters[i+1]), "w-", linewidth=10.0)
-            plt.plot( (coord_clusters[i], coord_clusters[i+1]), (coord_clusters[i+1], coord_clusters[i+1]), "w-", linewidth=10.0)
-            plt.plot( (coord_clusters[i], coord_clusters[i]), (coord_clusters[i], coord_clusters[i+1]), "w-", linewidth=10.0)
-            plt.plot( (coord_clusters[i], coord_clusters[i+1]), (coord_clusters[i], coord_clusters[i]), "w-", linewidth=10.0)
-            plt.plot( (coord_clusters[i+1], coord_clusters[i+1]), (coord_clusters[i], coord_clusters[i+1]), "r-", linewidth=3.5)
-            plt.plot( (coord_clusters[i], coord_clusters[i+1]), (coord_clusters[i+1], coord_clusters[i+1]), "r-", linewidth=3.5)
-            plt.plot( (coord_clusters[i], coord_clusters[i]), (coord_clusters[i], coord_clusters[i+1]), "r-", linewidth=3.5)
-            plt.plot( (coord_clusters[i], coord_clusters[i+1]), (coord_clusters[i], coord_clusters[i]), "r-", linewidth=3.5)
-        if self.tight_mode:
-            plt.xticks([])
-            plt.yticks([])
-        plt.title(self.default_title.format(codesubject=codesubject), fontsize="x-large")
-        
 
 class DistanceHistogramPlotter(Plotter):
     def __init__(self, filename_template="{codesubject}_histogram_distance", basepath="./plots/distance_matrices", label_groups=None, tight_mode=False):

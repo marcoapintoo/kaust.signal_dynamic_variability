@@ -143,7 +143,7 @@ def plot_empirical_asymptotic_matrices(plottable_objects, as_grid=False, plotbas
 #
 #
 #
-
+from utils.connectivity import fmri_var_to_pdc
 # 
 def plot_stimuli_grid_per_subject(userid, names, plotable_matrices, plotbasepath="plots"):
     plot = plotter.DistanceHistogramPlotter(basepath="./{0}/convergence_stimuli".format(plotbasepath), filename_template="{codesubject}_stimuli", tight_mode=True)
@@ -153,7 +153,7 @@ def plot_stimuli_grid_per_subject(userid, names, plotable_matrices, plotbasepath
     plot.default_title = "Stimuli {codesubject}"
     plot.plot_grid("{0}".format(userid), names, plotable_matrices, cols=4)
 
-def get_average_matrix(key, empirical_conditional, asymptotic_inverse_projection, signal_names):
+def get_average_matrix(key, empirical_conditional, asymptotic_inverse_projection, signal_names, as_pdc=False):
     matrix = 0
     for index, proportion in enumerate(empirical_conditional.get_distribution(key, normalized=True)):
         #if index == 0 or proportion == 0:
@@ -172,7 +172,7 @@ def get_average_matrix(key, empirical_conditional, asymptotic_inverse_projection
     plotable = asymptotic.MatrixPlotableObject(
         hashcode="",
         keynames=signal_names,
-        distance_matrix=matrix,
+        distance_matrix=matrix if not as_pdc else fmri_var_to_pdc(matrix),
     )
     return plotable
 
@@ -181,6 +181,7 @@ def plot_subject_grid_per_stimuli(stimulus, convergence_matrices, plotbasepath="
     plot.m = None
     #plot.cmap = "YlGnBu"
     plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
+    plot.m = 0.7; plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
     plot.default_title = "Subject {codesubject}"
     plot.plot_grid("{0}".format(stimulus), [a for a, b in convergence_matrices.items()], [b for a, b in convergence_matrices.items()], cols=4)
 
@@ -195,6 +196,7 @@ def plot_stimuli_mean_across_subjects(stimulus, convergence_matrices, signal_nam
     plot.m = None
     #plot.cmap = "YlGnBu"
     plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
+    plot.m = 0.7; plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
     plot.default_title = "Subject {codesubject}"
     plot.plot("{0}".format(stimulus), plotable)
 
@@ -211,12 +213,12 @@ def plot_empirical_distributions(userid, empirical_conditional, orders=[], plotb
         for plot in plotters:
             plot.plot(userid, empirical_conditional)
 
-def get_plot_empirical_distributions(userid, convergence_matrices_users, empirical_conditional, asymptotic_inverse_projection, signal_names, plotbasepath="plots"):
+def get_plot_empirical_distributions(userid, convergence_matrices_users, empirical_conditional, asymptotic_inverse_projection, signal_names, plotbasepath="plots", as_pdc=False):
     names, plotable_matrices = [], []
     print("KEYNAMES:", sorted(empirical_conditional.keynames))
     for k, key in enumerate(sorted(empirical_conditional.keynames)):
         print("   ", userid, key, empirical_conditional.get_distribution(key, normalized=True)[:5].tolist())
-        plotable = get_average_matrix(key, empirical_conditional, asymptotic_inverse_projection, signal_names)
+        plotable = get_average_matrix(key, empirical_conditional, asymptotic_inverse_projection, signal_names, as_pdc=as_pdc)
         convergence_matrices_users.setdefault(key, {})
         convergence_matrices_users[key][userid] = plotable
         names.append(key)
@@ -280,7 +282,7 @@ def default_processing(n_estimators):
         user_empirical_conditionals.append((userid, empirical_conditional))
 
         # Print empirical distributions
-        get_plot_empirical_distributions(userid, convergence_matrices_users, empirical_conditional, asymptotic_inverse_projection, signal_names, plotbasepath=plotbasepath)
+        get_plot_empirical_distributions(userid, convergence_matrices_users, empirical_conditional, asymptotic_inverse_projection, signal_names, plotbasepath=plotbasepath, as_pdc=True)
 
         # Grouped labels
         grouped_labels = grouped_movie_labels[: len(coefficients)] #Delete the last parts lost with the time-varying

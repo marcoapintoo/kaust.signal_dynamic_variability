@@ -1,7 +1,6 @@
 
 # MODELING DYNAMIC CONNECTIVITY STATES
 
-## Introduction
 
 Brain connectivity is frequently examined with functional neuroimaging
 as a method to quantify changes in interactions between distinct brain
