@@ -10,14 +10,20 @@ class EmpiricalConditionals:
         """
         Symmetric Leibler-Kullback divergence
         """
-        #x, y = x[np.where((x!=0)*(y!=0))[0]], y[np.where((x!=0)*(y!=0))[0]]
         eps = 1e-100
-        return np.abs(
+        #return
+        #return (np.sum(x * np.log10(eps + x / (eps + y))))
+        (
             #np.abs
-            (np.sum(x * np.log(eps + y / (eps + x)))) + 
+            (np.sum(x * np.log10(eps + x / (eps + y)))) + 
             #np.abs
-            (np.sum(y * np.log(eps + x / (eps + y))))
+            (np.sum(y * np.log10(eps + y / (eps + x))))
         )
+        #return (np.sum(x * np.log10(eps + x / (eps + y))))
+        return np.sqrt((
+            np.abs(np.sum(y * np.log10(eps + y / (eps + x)))) *
+            np.abs(np.sum(x * np.log10(eps + x / (eps + y))))
+        ))
 
     @property
     def keynames(self):

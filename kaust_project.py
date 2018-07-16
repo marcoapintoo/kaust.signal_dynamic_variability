@@ -90,6 +90,12 @@ def load_dataset_values():
         ['jeff_noise', 'megan_noise', 'noise', 'nathan_noise', 'student_noise', 'jeff_megan_noise'],
         ['silence', 'jeff_silence', 'mom_silence', 'olivia_silence', 'megan_silence',],
     ]
+    order_background = [
+        ['song', 'jeff_song',],
+        ['jeff_music', 'megan_music', 'music', 'jeff_megan_music', 'sierra_music',], 
+        ['jeff_noise', 'megan_noise', 'noise', 'nathan_noise', 'student_noise', 'jeff_megan_noise'],
+        ['jeff_silence', 'silence', 'olivia_silence', 'mom_silence',  'megan_silence',],
+    ]
     locutors_vs_silence = [
         ['silence'],
         #['music', 'noise', 'song',],
@@ -129,12 +135,14 @@ def plot_empirical_asymptotic_matrices(plottable_objects, as_grid=False, plotbas
         plot = plotter.DistanceHistogramPlotter(basepath="./{0}/convergence_matrices".format(plotbasepath), filename_template="{codesubject}_convergence_matrix", tight_mode=True)
         plot.m = None
         plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
+        plot.cmap = "YlGnBu"
         plot.default_title = "State {codesubject}"
         plot.plot_grid("ALL", [p.hashcode for p in plottable_objects], plottable_objects, cols=8)
         return
     for plottable_object in plottable_objects:
         plot = plotter.DistanceHistogramPlotter(basepath="./{0}/convergence_matrices".format(plotbasepath), filename_template="{codesubject}_convergence_matrix", tight_mode=False)
         plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
+        plot.cmap = "YlGnBu"
         plot.default_title = "State {codesubject}"
         plot.m = None
         plot.plot(plottable_object.hashcode, plottable_object)
@@ -149,7 +157,7 @@ def plot_stimuli_grid_per_subject(userid, names, plotable_matrices, plotbasepath
     plot = plotter.DistanceHistogramPlotter(basepath="./{0}/convergence_stimuli".format(plotbasepath), filename_template="{codesubject}_stimuli", tight_mode=True)
     plot.m = None
     #plot.cmap = "YlGnBu"
-    plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
+    plot.cmap = "YlGnBu"#sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
     plot.default_title = "Stimuli {codesubject}"
     plot.plot_grid("{0}".format(userid), names, plotable_matrices, cols=4)
 
@@ -181,8 +189,9 @@ def plot_subject_grid_per_stimuli(stimulus, convergence_matrices, plotbasepath="
     plot.m = None
     #plot.cmap = "YlGnBu"
     plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
-    plot.m = 0.7; plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
+    plot.m = 0.6; plot.cmap = "YlGnBu"#sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
     plot.default_title = "Subject {codesubject}"
+    for a, b in convergence_matrices.items(): b.distance_matrix = np.round(b.distance_matrix, 1)
     plot.plot_grid("{0}".format(stimulus), [a for a, b in convergence_matrices.items()], [b for a, b in convergence_matrices.items()], cols=4)
 
 def plot_stimuli_mean_across_subjects(stimulus, convergence_matrices, signal_names, plotbasepath="plots"):
@@ -196,8 +205,9 @@ def plot_stimuli_mean_across_subjects(stimulus, convergence_matrices, signal_nam
     plot.m = None
     #plot.cmap = "YlGnBu"
     plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
-    plot.m = 0.7; plot.cmap = sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
+    plot.m = 0.6; plot.cmap = "YlGnBu"#sns.diverging_palette(10, 220, sep=100, n=10, as_cmap=True)
     plot.default_title = "Subject {codesubject}"
+    plotable.distance_matrix = np.round(plotable.distance_matrix, 1)
     plot.plot("{0}".format(stimulus), plotable)
 
 
@@ -211,6 +221,7 @@ def plot_empirical_distributions(userid, empirical_conditional, orders=[], plotb
             plotter.HistogramMatrixPlotter(basepath="./{0}/{1}/distance_matrix".format(plotbasepath, basepath), filename_template=filename_template, label_groups=groups, tight_mode=True),
         ]
         for plot in plotters:
+            plot.cmap = "YlGnBu"
             plot.plot(userid, empirical_conditional)
 
 def get_plot_empirical_distributions(userid, convergence_matrices_users, empirical_conditional, asymptotic_inverse_projection, signal_names, plotbasepath="plots", as_pdc=False):
@@ -234,6 +245,7 @@ def plot_all_conditionals(empirical_conditionals, orders, rows, cols, plotbasepa
             plotter.DistanceHistogramPlotter(basepath="./{0}/{1}".format(plotbasepath, basepath), filename_template=filename_template, label_groups=groups, tight_mode=True)
         )
     for plot in plotters:
+        plot.cmap = "YlGnBu"
         plot.plot_grid("ALL", [a for a, b in empirical_conditionals], [b for a, b in empirical_conditionals], rows=rows, cols=cols)
 
 def default_processing(n_estimators):
@@ -247,7 +259,8 @@ def default_processing(n_estimators):
     names, movie_labels = filter_labels(extract_labels_movie(), category="speech_nonspeech")
     grouped_names, grouped_movie_labels = filter_group_labels(extract_labels_movie(), category="speech_nonspeech")
     #projector = random_projection.RandomProjector(n_estimators=6)
-    projector = random_projection.RandomProjector(n_estimators=n_estimators, random_state=0)
+    projector = random_projection.RandomProjector(n_estimators=n_estimators, random_state=7)
+    #projector = random_projection.OrderedRandomProjector(n_estimators=n_estimators, random_state=0)
     tvprocess = tv_var.TimeVaryingVAR(window_size=100, step_size=1, window_type="boxcar")
     #print("bins=", np.arange(0.1, 2**projector.random_vector_count + 1.1, 1))
     
@@ -310,7 +323,7 @@ def default_processing(n_estimators):
     
 
 if __name__ == "__main__":
-    default_processing(n_estimators=5)
+    default_processing(n_estimators=6)
 
 if __name__ == "__main__2":
     default_processing(n_estimators=2)

@@ -93,7 +93,8 @@ class DistanceHistogramPlotter(Plotter):
         super().__init__(filename_template, basepath)
         self.label_groups = label_groups
         self.tight_mode = tight_mode
-        self.m = 200
+        self.m = 100
+        self.m = None
         self.default_title = "Subject {codesubject}"
         self.cmap = COLOR_MAP
         
